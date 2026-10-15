@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Attendly helps college students calculate attendance requirements and plan how many classes they can safely skip." />
+  <meta name="theme-color" content="#f6f7fb" />
+  <title>Attendly — Attendance Planner</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="Attendly home"><span class="brand-mark">A</span><span>attendly<span class="brand-dot">.</span></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-scroll="top"><span class="nav-icon">▦</span> Overview</button>
+      <button class="nav-item" data-scroll="manual-panel"><span class="nav-icon">％</span> Quick calculator</button>
+      <button class="nav-item" data-scroll="planner-panel"><span class="nav-icon">▤</span> Semester planner</button>
+      <div class="sidebar-bottom">
+        <div class="help-icon">?</div>
+        <div>
+          <strong>Plan with precision</strong>
+          <p>Deterministic calculations. No cloud AI or API keys needed.</p>
+        </div>
+      </div>
+      <div class="side-foot">ATTENDLY · PRODUCTION READY</div>
+    </aside>
+
+    <main class="main-content" id="top">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">A</span> attendly<span class="brand-dot">.</span></div>
+        <div class="topbar-right">
+          <span class="secure-dot" title="Local execution"></span>
+          <span>Private &amp; Offline-Ready</span>
+          <div class="avatar" title="Student Session">S</div>
+        </div>
+      </header>
+
+      <section class="welcome-row">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR SEMESTER, IN CONTROL</div>
+          <h1>Attendance, <span>made simple.</span></h1>
+          <p class="subheading">Know where you stand today — and how many future classes you can safely miss.</p>
+        </div>
+        <div class="date-chip">
+          <span class="calendar-mini">▦</span>
+          <div>
+            <small>TODAY</small>
+            <strong id="today-label">—</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="stat-grid">
+        <article class="stat-card">
+          <div class="stat-top"><span>Target Options</span><span class="stat-icon violet">◎</span></div>
+          <div class="stat-value">75–90<span>%</span></div>
+          <div class="stat-note">75%, 80%, 85%, 90% or custom percentage</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Two Workflows</span><span class="stat-icon blue">↗</span></div>
+          <div class="stat-value">01 <span class="muted-slash">/</span> 02</div>
+          <div class="stat-note">Quick calculator or full semester planner</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Mathematical Accuracy</span><span class="stat-icon green">✓</span></div>
+          <div class="stat-value">Zero <span>Guesswork</span></div>
+          <div class="stat-note">Date-wise schedules, multi-period labs &amp; verified math</div>
+        </article>
+      </section>
+
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">CHOOSE YOUR WORKFLOW</div>
+          <h2>How would you like to plan?</h2>
+        </div>
+      </div>
+
+      <div class="mode-tabs" role="tablist">
+        <button class="mode-tab selected" data-tab="manual-panel" id="tab-btn-quick">
+          <span class="tab-number">01</span>
+          <span>
+            <strong>Quick calculator</strong>
+            <small>Instant calculation for any single course or aggregate</small>
+          </span>
+        </button>
+        <button class="mode-tab" data-tab="planner-panel" id="tab-btn-semester">
+          <span class="tab-number ai-number">02</span>
+          <span>
+            <strong>Semester planner</strong>
+            <small>Extract or enter timetable &amp; calendar for subject projections</small>
+          </span>
+        </button>
+      </div>
+
+      <!-- Quick Calculator Panel -->
+      <section class="workspace-panel" id="manual-panel">
+        <div class="panel-heading">
+          <div class="panel-symbol violet-bg">％</div>
+          <div>
+            <h3>Quick attendance calculator</h3>
+            <p>Compute required future attendance and safe skips for any subject.</p>
+          </div>
+          <span class="step-label">WORKFLOW 1</span>
+        </div>
+
+        <div class="form-grid three-col">
+          <label class="field">
+            <span>Classes attended so far (P)</span>
+            <input id="manual-present" type="number" min="0" step="1" value="43" />
+            <small>Classes you were marked present for</small>
+          </label>
+          <label class="field">
+            <span>Total classes conducted (T)</span>
+            <input id="manual-total" type="number" min="0" step="1" value="56" />
+            <small>Total classes conducted to date</small>
+          </label>
+          <label class="field">
+            <span>Minimum attendance target (R)</span>
+            <select id="manual-target-select">
+              <option value="75">75% target</option>
+              <option value="80">80% target</option>
+              <option value="85">85% target</option>
+              <option value="90">90% target</option>
+              <option value="custom">Custom target %</option>
+            </select>
+            <div id="manual-custom-target-wrap" class="hidden" style="margin-top:6px;">
+              <input id="manual-custom-target" type="number" min="1" max="100" step="0.1" placeholder="Enter % e.g. 78.5" />
+            </div>
+            <small>College or department requirement</small>
+          </label>
+        </div>
+
+        <div class="future-row">
+          <div>
+            <strong>Expected future classes (N)</strong>
+            <p>Number of classes scheduled before exams or semester end.</p>
+          </div>
+          <input id="manual-future" type="number" min="0" step="1" value="40" aria-label="Future classes" />
+        </div>
+
+        <div class="button-row">
+          <button class="primary-btn" id="manual-calculate">Calculate attendance <span>→</span></button>
+          <button class="text-btn" id="manual-reset">Reset</button>
+        </div>
+
+        <div class="results-area hidden" id="manual-results" aria-live="polite"></div>
+      </section>
+
+      <!-- Semester Planner Panel -->
+      <section class="workspace-panel planner-panel" id="planner-panel">
+        <div class="panel-heading">
+          <div class="panel-symbol blue-bg">▤</div>
+          <div>
+            <h3>Semester planner</h3>
+            <p>Upload your calendar and timetable or build your schedule manually.</p>
+          </div>
+          <span class="step-label">WORKFLOW 2</span>
+        </div>
+
+        <div class="upload-grid">
+          <label class="upload-card" for="calendar-file">
+            <span class="upload-symbol">▦</span>
+            <span class="upload-title">Academic calendar</span>
+            <span class="upload-desc">Semester start/end dates, holidays, exams and working Saturdays.</span>
+            <span class="file-types">PDF · PNG · JPG · WEBP (Max 12 MB)</span>
+            <span class="file-name" id="calendar-name">Choose calendar file</span>
+            <input id="calendar-file" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" />
+          </label>
+
+          <label class="upload-card" for="timetable-file">
+            <span class="upload-symbol blue-upload">▤</span>
+            <span class="upload-title">Weekly timetable</span>
+            <span class="upload-desc">Your class schedule with subjects, periods and multi-period labs.</span>
+            <span class="file-types">PDF · PNG · JPG · WEBP (Max 12 MB)</span>
+            <span class="file-name" id="timetable-name">Choose timetable file</span>
+            <input id="timetable-file" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" />
+          </label>
+        </div>
+
+        <div class="privacy-note">
+          <span>ⓘ</span>
+          <p><strong>Private by design:</strong> Files are parsed strictly in memory by local Python algorithms and PyMuPDF/OCR. No data is sent to external AI servers or saved to databases.</p>
+        </div>
+
+        <div class="button-row">
+          <button class="primary-btn" id="analyze-btn">Extract schedule from documents <span>▤</span></button>
+          <button class="text-btn" id="manual-entry-btn">Enter schedule manually (skip upload)</button>
+          <span class="inline-status" id="analyze-status" role="status"></span>
+        </div>
+        <div class="error-box hidden" id="analyze-error" role="alert"></div>
+
+        <!-- Interactive Review & Schedule Builder Screen -->
+        <div class="review-area hidden" id="review-area">
+          <div class="review-title">
+            <div>
+              <div class="eyebrow">REVIEW &amp; VERIFY</div>
+              <h3>Verify your semester schedule</h3>
+              <p>Review the extracted information. Adjust any dates, weekly classes, or holidays below before calculating.</p>
+            </div>
+            <span class="review-badge">Editable &amp; Verified</span>
+          </div>
+
+          <!-- Semester Dates Card -->
+          <div class="review-card">
+            <div class="review-card-header">
+              <h4>1. Semester Dates</h4>
+              <small>Future classes are counted from the selected future-start date through the last working day</small>
+            </div>
+            <div class="form-grid two-col date-fields">
+              <label class="field">
+                <span>Semester start date</span>
+                <input type="date" id="start-date" />
+                <small>Start of the academic instruction period</small>
+              </label>
+              <label class="field">
+                <span>Semester last working day</span>
+                <input type="date" id="end-date" />
+                <small>Final day of regular instruction</small>
+              </label>
+              <label class="field">
+                <span>Count future classes from</span>
+                <input type="date" id="future-start-date" />
+                <small>Defaults to tomorrow because today’s attendance should already be reflected above</small>
+              </label>
+            </div>
+          </div>
+
+          <!-- Weekly Timetable Builder -->
+          <div class="review-card">
+            <div class="review-card-header">
+              <h4>2. Weekly Class Timetable</h4>
+              <small>Define teaching periods for each weekday. Multi-period labs count as 2+ periods.</small>
+            </div>
+            <div class="weekday-tabs" id="weekday-tabs" role="tablist">
+              <button type="button" class="weekday-tab active" data-day="Monday">Mon</button>
+              <button type="button" class="weekday-tab" data-day="Tuesday">Tue</button>
+              <button type="button" class="weekday-tab" data-day="Wednesday">Wed</button>
+              <button type="button" class="weekday-tab" data-day="Thursday">Thu</button>
+              <button type="button" class="weekday-tab" data-day="Friday">Fri</button>
+              <button type="button" class="weekday-tab" data-day="Saturday">Sat</button>
+              <button type="button" class="weekday-tab" data-day="Sunday">Sun</button>
+            </div>
+            <div class="weekday-schedule-container" id="weekday-schedule-container">
+              <!-- Rendered dynamically by script.js -->
+            </div>
+            <div class="schedule-actions-row">
+              <button type="button" class="secondary-btn" id="add-period-btn">+ Add period to this day</button>
+            </div>
+          </div>
+
+          <!-- Holidays and Non-Teaching Dates -->
+          <div class="review-card">
+            <div class="review-card-header">
+              <h4>3. Holidays &amp; Non-Teaching Days</h4>
+              <small>No classes will be counted on these dates</small>
+            </div>
+            <div class="holiday-input-row">
+              <input type="date" id="new-holiday-date" />
+              <input type="text" id="new-holiday-name" placeholder="Reason (e.g., Festival / Exam)" />
+              <button type="button" class="secondary-btn" id="add-holiday-btn">+ Add Date</button>
+            </div>
+            <div class="tag-cloud" id="holidays-tag-cloud">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Target Percentage & Current Attendance Table -->
+          <div class="review-card">
+            <div class="review-card-header">
+              <h4>4. Current Attendance &amp; Target</h4>
+              <small>Enter how many classes you have attended out of total conducted for each subject</small>
+            </div>
+            <div class="form-grid two-col" style="margin-bottom:15px;">
+              <label class="field">
+                <span>Required attendance target</span>
+                <select id="semester-target-select">
+                  <option value="60">60% minimum</option>
+                  <option value="65">65% minimum</option>
+                  <option value="75" selected>75% minimum</option>
+                  <option value="80">80% minimum</option>
+                  <option value="85">85% minimum</option>
+                  <option value="90">90% minimum</option>
+                  <option value="custom">Custom target %</option>
+                </select>
+                <div id="semester-custom-target-wrap" class="hidden" style="margin-top:6px;">
+                  <input id="semester-custom-target" type="number" min="1" max="100" step="0.1" placeholder="Enter % e.g. 78.5" />
+                </div>
+              </label>
+              <div class="field">
+                <span>Subject sync</span>
+                <div class="field-hint">Subjects in the weekly timetable are automatically reflected below.</div>
+              </div>
+            </div>
+
+            <div id="subject-inputs" class="subject-inputs"></div>
+            <button type="button" class="secondary-btn" id="add-subject-btn" style="margin-top:10px;">+ Add new subject</button>
+          </div>
+
+          <!-- Extraction Notes / Warnings -->
+          <div id="extraction-notes-box" class="result-note hidden"></div>
+
+          <div class="button-row">
+            <button class="primary-btn" id="project-btn">Calculate semester attendance plan <span>→</span></button>
+            <button class="text-btn" id="reset-review-btn">Clear and restart</button>
+          </div>
+          <div class="error-box hidden" id="project-error" role="alert"></div>
+
+          <!-- Final Results Display -->
+          <div class="results-area hidden" id="semester-results" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>attendly<span class="brand-dot">.</span></span>
+        <span>Plan with clarity. Attend with confidence.</span>
+        <span>Always verify college attendance rules.</span>
+      </footer>
+    </main>
+  </div>
+  <script src="/static/script.js" defer></script>
+</body>
+</html>
